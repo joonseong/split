@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>페이지 {{ page_number }}/{{ total_pages }}</title>
+  </head>
+  <body>
+    <h1>페이지 {{ page_number }}/{{ total_pages }}</h1>
+    <div>{{ page_content }}</div>
+
+    <div style="margin-top: 20px">
+      <!-- 이전 페이지 버튼 -->
+      {% if page_number > 1 %}
+      <a href="{{ url_for('show_page', page_number=page_number - 1) }}">이전</a>
+      {% endif %}
+
+      <!-- 다음 페이지 버튼 -->
+      {% if page_number < total_pages %}
+      <a href="{{ url_for('show_page', page_number=page_number + 1) }}">다음</a>
+      {% endif %}
+    </div>
+
+    <div style="margin-top: 20px">
+      <a href="/">파일 업로드 페이지로 돌아가기</a>
+    </div>
+  </body>
+</html>
