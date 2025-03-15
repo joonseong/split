@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>시리즈 목록</title>
+  </head>
+  <body>
+    <h1>시리즈 목록</h1>
+    <ul>
+      {% for sid, info in series_db.items() %}
+      <li>
+        <strong>{{ info.title }}</strong>
+        <!-- 첫 페이지로 이동 -->
+        <a href="{{ url_for('show_page', series_id=sid, page_number=1) }}"
+          >[열기]</a
+        >
+      </li>
+      {% endfor %}
+    </ul>
+
+    <hr />
+    <a href="/">메인으로 돌아가기</a>
+  </body>
+</html>
