@@ -96,6 +96,26 @@
     <!-- 하단 중앙 "시리즈 목록으로 가기" 링크 -->
     <div class="series-link">
       <a href="{{ url_for('series_list') }}">시리즈 목록으로 가기</a>
+
+      <!-- 이전 시리즈 버튼 -->
+      {% if prev_series_id %}
+      <br />
+      <a
+        href="{{ url_for('show_page', series_id=prev_series_id, page_number=1) }}"
+      >
+        이전 시리즈 보기
+      </a>
+      {% endif %}
+
+      <!-- 다음 시리즈 버튼 -->
+      {% if next_series_id %}
+      <br />
+      <a
+        href="{{ url_for('show_page', series_id=next_series_id, page_number=1) }}"
+      >
+        다음 시리즈 보기
+      </a>
+      {% endif %}
     </div>
     <script>
       const pageNumber = {{ page_number }};
