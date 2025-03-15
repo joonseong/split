@@ -3,21 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <title>시리즈 목록</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+        background: #fff;
+        color: #151517;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        margin-bottom: 10px;
+      }
+      a {
+        text-decoration: none;
+        color: #151517;
+      }
+    </style>
   </head>
   <body>
     <h1>시리즈 목록</h1>
     <ul>
-      {% for sid, info in series_db.items() %}
+      {% for series_id, series in series_db.items() %}
       <li>
-        <strong>{{ info.title }}</strong>
-        <!-- 첫 페이지로 이동 -->
-        <a href="{{ url_for('show_page', series_id=sid, page_number=1) }}"
-          >[열기]</a
+        <strong>{{ series.title }}</strong> &nbsp;
+        <a href="{{ url_for('show_page', series_id=series_id, page_number=1) }}"
+          >열기</a
         >
       </li>
       {% endfor %}
     </ul>
-
     <hr />
     <a href="/">메인으로 돌아가기</a>
   </body>

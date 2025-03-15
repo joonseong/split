@@ -2,12 +2,21 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>메인 페이지</title>
+    <title>파일 업로드</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+        background: #fff;
+        color: #151517;
+      }
+    </style>
   </head>
   <body>
     <h1>파일 업로드</h1>
     <form action="/upload" method="post" enctype="multipart/form-data">
-      <input type="file" name="file" />
+      <input type="file" name="file" accept=".pdf,.epub,.doc,.docx" required />
       <button type="submit">업로드</button>
     </form>
     <hr />
