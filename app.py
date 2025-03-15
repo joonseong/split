@@ -1,35 +1,24 @@
 import os
 import re
+import uuid
 from flask import Flask, render_template, request, redirect, url_for, session
+from werkzeug.utils import secure_filename
 import PyPDF2
-import docx
-from ebooklib import epub
 
 app = Flask(__name__)
-app.secret_key = 'YOUR_SECRET_KEY'  # 세션 사용을 위해 임의 문자열 설정
+app.secret_key = 'YOUR_SECRET_KEY'  # 적절한 비밀키로 변경
+app.config['UPLOAD_FOLDER'] = 'uploads'
 
-UPLOAD_FOLDER = 'uploads'
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# 업로드 폴더 없으면 생성
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
-
-def extract_text(filepath):
-    """
-    업로드된 파일의 확장자를 확인하고,
-    PDF, EPUB, DOCX에 맞춰 텍스트를 추출한다.
-    """
-    ext = os.path.splitext(filepath)[1].lower()
-    if ext == '.pdf':
-        return extract_text_from_pdf(filepath)
-    elif ext == '.epub':
-        return extract_text_from_epub(filepath)
-    elif ext in ['.doc', '.docx']:
-        return extract_text_from_docx(filepath)
-    else:
-        return ""
+# PDF 업로드 후 분할된 시리즈 데이터를 저장할 전역 딕셔너리
+# (실제 운영 시 DB나 서버측 세션 사용 권장)
+SERIES_DB = {}
 
 def extract_text_from_pdf(filepath):
+    """PDF 파일에서 텍스트 추출 (단순 예시)"""
     text = ""
     with open(filepath, 'rb') as f:
         reader = PyPDF2.PdfReader(f)
@@ -39,151 +28,124 @@ def extract_text_from_pdf(filepath):
                 text += page_text + "\n"
     return text
 
-def extract_text_from_epub(filepath):
-    text = ""
-    book = epub.read_epub(filepath)
-    for item in book.get_items():
-        if item.get_type() == epub.EpubHtml:
-            content = item.get_content().decode('utf-8', errors='ignore')
-            text += content + "\n"
-    return text
-
-def extract_text_from_docx(filepath):
-    doc = docx.Document(filepath)
-    # 각 단락을 줄바꿈으로 연결
-    text = "\n".join([para.text for para in doc.paragraphs])
-    return text
-
-
-def split_text_custom(text, chunk_size=220, max_pages=10):
+def extract_text_and_images(filepath):
     """
-    1) 먼저 '처음 (max_pages - 1)개 페이지'는 문장 여부와 상관없이 정확히 220자씩 자른다.
-    2) 마지막에 남은 텍스트는 문장 단위(최대 220자씩)로 분할한다.
-    3) 최종적으로 페이지가 10개를 넘으면 잘라낸다.
+    PDF에서 텍스트(및 이미지)를 순서대로 추출한다고 가정.
+    여기서는 텍스트만 추출하는 단순 예시로,
+    items 리스트에 ("text", 전체텍스트) 항목을 추가합니다.
     """
+    items = []
+    text_content = extract_text_from_pdf(filepath)
+    items.append(("text", text_content))
+    # 이미지 추출 로직은 추가 구현 필요 (여기서는 생략)
+    return items
 
-    # -------------------------
-    # 1) 처음 (max_pages - 1)개 페이지는 220자씩 '무조건' 자르기
-    # -------------------------
-    pages = []
-    pos = 0
-    text_len = len(text)
-    # (max_pages - 1)번 반복 (예: 최대 9번)
-    for _ in range(max_pages - 1):
-        # 남은 텍스트가 220자보다 작으면 중단
-        if pos + chunk_size >= text_len:
-            break
-        # 220자 추출
-        chunk = text[pos:pos + chunk_size]
-        pages.append(chunk)
-        pos += chunk_size
-
-    # -------------------------
-    # 2) 마지막에 남은 부분을 문장 단위로 220자씩 분할
-    # -------------------------
-    leftover = text[pos:]  # 아직 처리 안 된 부분
-    if leftover:
-        sentence_chunks = split_text_by_sentence(leftover, chunk_size)
-        pages.extend(sentence_chunks)
-
-    # -------------------------
-    # 3) 최종 페이지를 max_pages개로 제한
-    # -------------------------
-    pages = pages[:max_pages]
-
-    return pages
-
-
-def split_text_by_sentence(text, chunk_size=220):
+def split_text_by_rules(text, max_chars=220, max_lines=12):
     """
-    문장을 '.', '?', '!' 뒤에서 나누고,
-    각 문장을 최대 220자 내외로 모아서 여러 페이지(덩어리)로 만든다.
+    전체 텍스트를 줄바꿈(\n) 기준으로 나눈 후,
+    한 덩어리의 글자 수가 max_chars, 혹은 줄 수가 max_lines를 초과하면
+    새 덩어리로 분할하여 리스트로 반환합니다.
     """
-    # 1) 구두점(., ?, !)을 기준으로 split하되, 구두점을 버리지 않기 위해 re.split에서 캡처 그룹을 사용
-    tokens = re.split('([.?!])', text)
-
-    # 2) 문장 + 구두점을 합쳐서 하나의 문장으로 정리
-    sentences = []
-    for i in range(0, len(tokens), 2):
-        if i + 1 < len(tokens):
-            sentence = tokens[i].strip() + tokens[i+1]
-        else:
-            sentence = tokens[i].strip()
-        sentence = sentence.strip()
-        if sentence:
-            sentences.append(sentence)
-
-    # 3) 220자 내외로 문장을 모아서 분할
+    lines = text.split('\n')
     chunks = []
-    current_chunk = ""
-    for sentence in sentences:
-        # 다음 문장을 추가했을 때 220자를 초과하면 새 덩어리
-        if len(current_chunk) + len(sentence) + 1 <= chunk_size:
-            if current_chunk:
-                current_chunk += " "
-            current_chunk += sentence
-        else:
-            if current_chunk:
-                chunks.append(current_chunk)
-            current_chunk = sentence
-
-    # 마지막 덩어리 추가
+    current_chunk = []
+    current_char_count = 0
+    current_line_count = 0
+    for line in lines:
+        line_length = len(line)
+        if (current_line_count + 1 > max_lines) or (current_char_count + line_length > max_chars):
+            chunks.append("\n".join(current_chunk))
+            current_chunk = []
+            current_char_count = 0
+            current_line_count = 0
+        current_chunk.append(line)
+        current_char_count += line_length
+        current_line_count += 1
     if current_chunk:
-        chunks.append(current_chunk)
-
+        chunks.append("\n".join(current_chunk))
     return chunks
 
+def ordinal(num):
+    """1~10까지 한글 서수(첫번째, 두번째, …)를 반환, 그 외에는 '{num}번째' 형식으로"""
+    ordinals = {
+        1: "첫번째",
+        2: "두번째",
+        3: "세번째",
+        4: "네번째",
+        5: "다섯번째",
+        6: "여섯번째",
+        7: "일곱번째",
+        8: "여덟번째",
+        9: "아홉번째",
+        10: "열번째"
+    }
+    return ordinals.get(num, f"{num}번째")
+
+def split_items_into_series(items, max_chars=220, max_lines=12, pages_per_series=10):
+    """
+    items (예: [("text", "...")])의 텍스트 항목을
+    최대 220자 또는 최대 12줄 단위로 청크로 분할한 후,
+    한 시리즈당 pages_per_series (기본 10) 페이지씩 그룹핑합니다.
+    각 시리즈의 제목은 "첫번째 시리즈", "두번째 시리즈", … 로 지정합니다.
+    반환: 시리즈 리스트 (각 시리즈는 dict: {id, title, pages})
+    """
+    series_list = []
+    for item_type, content in items:
+        if item_type == "text":
+            text_chunks = split_text_by_rules(content, max_chars, max_lines)
+            total_pages = len(text_chunks)
+            series_count = 0
+            for i in range(0, total_pages, pages_per_series):
+                series_count += 1
+                part_pages = text_chunks[i:i+pages_per_series]
+                title = ordinal(series_count) + " 시리즈"
+                series_list.append({
+                    'id': str(uuid.uuid4()),
+                    'title': title,
+                    'pages': part_pages
+                })
+        # 이미지 항목 처리 추가 가능
+    return series_list
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
 @app.route('/upload', methods=['POST'])
 def upload():
     uploaded_file = request.files.get('file')
-    if uploaded_file:
-        # 1) 파일 저장
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
-        uploaded_file.save(filepath)
+    if not uploaded_file:
+        return "파일이 업로드되지 않았습니다.", 400
+    filename = secure_filename(uploaded_file.filename)
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    uploaded_file.save(filepath)
+    items = extract_text_and_images(filepath)
+    series_list = split_items_into_series(items, max_chars=220, max_lines=12, pages_per_series=10)
+    # 각 시리즈를 전역 딕셔너리에 저장
+    for series in series_list:
+        SERIES_DB[series['id']] = series
+    return redirect(url_for('series_list'))
 
-        # 2) 텍스트 추출
-        extracted_text = extract_text(filepath)
+@app.route('/series')
+def series_list():
+    return render_template('series_list.html', series_db=SERIES_DB)
 
-        # 3) 커스텀 분할 함수 호출
-        pages = split_text_custom(extracted_text, chunk_size=220, max_pages=10)
-
-        # 4) 세션에 저장
-        session['pages'] = pages
-
-        # 5) 첫 페이지로 이동
-        return redirect(url_for('show_page', page_number=1))
-
-    return "파일 업로드 실패"
-
-
-@app.route('/page/<int:page_number>')
-def show_page(page_number):
-    pages = session.get('pages', [])
+@app.route('/series/<series_id>/page/<int:page_number>')
+def show_page(series_id, page_number):
+    series = SERIES_DB.get(series_id)
+    if not series:
+        return "존재하지 않는 시리즈입니다.", 404
+    pages = series.get('pages', [])
     total_pages = len(pages)
-
-    if total_pages == 0:
-        return "아직 업로드된 텍스트가 없습니다."
-
-    # 페이지 번호가 범위를 벗어나면 404
     if page_number < 1 or page_number > total_pages:
         return "잘못된 페이지 번호입니다.", 404
-
-    # 현재 페이지 내용
     page_content = pages[page_number - 1]
-
-    return render_template(
-        'pagination.html',
-        page_content=page_content,
-        page_number=page_number,
-        total_pages=total_pages
-    )
-
+    return render_template('pagination.html',
+                           page_items=[("text", page_content)],
+                           page_number=page_number,
+                           total_pages=total_pages,
+                           series_id=series_id,
+                           series_title=series.get('title'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
