@@ -13,7 +13,7 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
-# 전역 딕셔너리: 업로드 후 생성된 시리즈 데이터를 저장
+# 전역 딕셔너리: 업로드 후 생성된 시리즈 데이터를 저장 (서버 재시작 시 초기화됨)
 SERIES_DB = {}
 
 def extract_text_from_pdf(filepath):
@@ -27,23 +27,38 @@ def extract_text_from_pdf(filepath):
                 text += page_text + "\n"
     return text
 
+def clean_text(text):
+    """
+    추출된 텍스트에서 불필요한 줄바꿈을 정리합니다.
+    - 두 개 이상의 연속 줄바꿈은 단락 구분으로 유지
+    - 단일 줄바꿈은 공백으로 변경하여 이어지게 합니다.
+    """
+    # 연속된 줄바꿈(\n{2,})을 임시 토큰으로 변경
+    text = re.sub(r'\n{2,}', '[[PARA]]', text)
+    # 단일 줄바꿈은 공백으로 변경
+    text = re.sub(r'\n', ' ', text)
+    # 임시 토큰을 다시 두 개의 줄바꿈으로 복원
+    text = text.replace('[[PARA]]', '\n\n')
+    return text
+
 def extract_text_and_images(filepath):
     """
-    PDF에서 텍스트(및 이미지)를 순서대로 추출한다고 가정.
-    여기서는 텍스트만 추출하는 단순 예시로,
-    ("text", 전체텍스트) 형태로 반환합니다.
+    PDF에서 텍스트(및 이미지)를 순서대로 추출한다고 가정합니다.
+    여기서는 텍스트만 추출하는 단순 예시로, ("text", 전체텍스트) 형태로 반환합니다.
     """
     items = []
     text_content = extract_text_from_pdf(filepath)
-    items.append(("text", text_content))
-    # 이미지 추출 로직은 필요 시 추가 구현
+    # 추출된 텍스트를 후처리: 불필요한 줄바꿈 제거
+    cleaned_text = clean_text(text_content)
+    items.append(("text", cleaned_text))
+    # 이미지 추출 로직은 필요 시 추가 구현 가능
     return items
 
 def split_text_by_rules(text, max_chars=220, max_lines=12):
     """
-    전체 텍스트를 줄바꿈(\n) 기준으로 나눈 후,
-    현재 청크에 추가했을 때 글자 수가 max_chars 또는 줄 수가 max_lines를 초과하면
-    새로운 청크로 분할합니다.
+    전체 텍스트를 줄바꿈(\n)을 기준으로 나눈 후,
+    현재 청크의 글자 수가 max_chars 또는 줄 수가 max_lines를 초과하면
+    새로운 청크로 분할하여 리스트로 반환합니다.
     """
     lines = text.split('\n')
     chunks = []
@@ -53,7 +68,6 @@ def split_text_by_rules(text, max_chars=220, max_lines=12):
 
     for line in lines:
         line_length = len(line)
-        # 다음 줄을 추가했을 때 제한 초과 시 분할
         if (current_line_count + 1 > max_lines) or (current_char_count + line_length > max_chars):
             chunks.append("\n".join(current_chunk))
             current_chunk = []
@@ -69,10 +83,7 @@ def split_text_by_rules(text, max_chars=220, max_lines=12):
     return chunks
 
 def ordinal(num):
-    """
-    1~10까지 한글 서수(첫번째, 두번째, …)를 반환,
-    그 외에는 '{num}번째' 형식으로 반환
-    """
+    """1~10까지 한글 서수(첫번째, 두번째, …)를 반환, 그 외에는 '{num}번째' 형식으로 반환"""
     ordinals = {
         1: "첫번째",
         2: "두번째",
@@ -91,8 +102,9 @@ def split_items_into_series(items, max_chars=220, max_lines=12, pages_per_series
     """
     items (예: [("text", "...")])의 "text" 항목을
     최대 220자 또는 최대 12줄 기준으로 분할한 뒤,
-    한 시리즈당 pages_per_series(기본 10) 페이지씩 묶어
-    여러 시리즈를 생성합니다.
+    한 시리즈당 pages_per_series(기본 10) 페이지씩 그룹핑합니다.
+    각 시리즈의 제목은 "첫번째 시리즈", "두번째 시리즈", … 형식으로 지정됩니다.
+    반환: 시리즈 리스트 (각 시리즈는 dict: {id, title, pages})
     """
     series_list = []
     for item_type, content in items:
@@ -109,7 +121,7 @@ def split_items_into_series(items, max_chars=220, max_lines=12, pages_per_series
                     'title': title,
                     'pages': part_pages
                 })
-        # "image" 항목 처리 추가 가능
+        # 이미지 항목 처리 추가 가능
     return series_list
 
 @app.route('/')
@@ -121,38 +133,33 @@ def index():
 def upload():
     """
     파일 업로드 처리:
-    1) 기존 시리즈 DB와 uploads 폴더 내 파일들을 삭제
-    2) 새 파일 업로드 및 저장
-    3) PDF 텍스트 추출 후 시리즈 생성
-    4) 시리즈 목록 페이지로 리디렉션
+    1) 기존 시리즈 데이터(SERIES_DB)와 uploads 폴더 내 파일들을 삭제
+    2) 새 파일 저장
+    3) PDF에서 텍스트(및 이미지) 추출 후, 텍스트를 분할하여 여러 시리즈로 그룹핑
+    4) 새 시리즈 데이터를 SERIES_DB에 저장 후 시리즈 목록 페이지로 리디렉션
     """
     uploaded_file = request.files.get('file')
     if not uploaded_file:
         return "파일이 업로드되지 않았습니다.", 400
 
-    # 1) 기존 시리즈 DB 비우기
+    # 기존 데이터 삭제
     SERIES_DB.clear()
-
-    # 2) uploads 폴더 내 기존 파일 삭제
     for f in os.listdir(app.config['UPLOAD_FOLDER']):
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], f)
         if os.path.isfile(file_path):
             os.remove(file_path)
 
-    # 3) 새 파일 저장
+    # 새 파일 저장
     filename = secure_filename(uploaded_file.filename)
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     uploaded_file.save(filepath)
 
-    # 4) 텍스트 추출 및 시리즈 분할
+    # PDF에서 텍스트(및 이미지) 추출 및 시리즈 생성
     items = extract_text_and_images(filepath)
     series_list = split_items_into_series(items, max_chars=220, max_lines=12, pages_per_series=10)
-
-    # 5) 새 시리즈 DB 저장
     for series in series_list:
         SERIES_DB[series['id']] = series
 
-    # 6) 시리즈 목록 페이지로 이동
     return redirect(url_for('series_list'))
 
 @app.route('/series')
@@ -164,8 +171,8 @@ def series_list():
 def show_page(series_id, page_number):
     """
     페이지네이션:
-    - 해당 시리즈의 페이지 목록에서 page_number 페이지를 가져와 표시
-    - 마지막 페이지인 경우, 이전/다음 시리즈 계산
+    - 해당 시리즈의 페이지 목록에서 page_number 페이지를 가져와 표시합니다.
+    - 마지막 페이지인 경우, 전역 딕셔너리(SERIES_DB)를 사용해 이전/다음 시리즈 ID를 계산합니다.
     """
     series = SERIES_DB.get(series_id)
     if not series:
@@ -178,7 +185,7 @@ def show_page(series_id, page_number):
 
     page_content = pages[page_number - 1]
 
-    # 마지막 페이지에서만 이전/다음 시리즈 계산
+    # 마지막 페이지인 경우 이전/다음 시리즈 ID 계산
     prev_series_id = None
     next_series_id = None
     if page_number == total_pages:
