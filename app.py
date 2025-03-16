@@ -133,13 +133,6 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    """
-    파일 업로드 처리:
-    - PDF 저장
-    - 텍스트 추출 및 분할
-    - 시리즈 DB에 저장
-    - 시리즈 목록 페이지로 이동
-    """
     uploaded_file = request.files.get('file')
     if not uploaded_file:
         return "파일이 업로드되지 않았습니다.", 400
@@ -148,16 +141,15 @@ def upload():
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     uploaded_file.save(filepath)
 
-    # PDF 텍스트 추출 (이미지 추출은 생략)
+    # PDF 파일에서 텍스트(및 이미지)를 추출하는 로직
     items = extract_text_and_images(filepath)
-
-    # 텍스트를 분할 -> 여러 시리즈로 생성
     series_list = split_items_into_series(items, max_chars=220, max_lines=12, pages_per_series=10)
-
-    # SERIES_DB에 시리즈 저장
+    
+    # 각 시리즈를 전역 딕셔너리에 저장
     for series in series_list:
         SERIES_DB[series['id']] = series
 
+    # 업로드가 완료되었으므로, 시리즈 목록 페이지로 리디렉션
     return redirect(url_for('series_list'))
 
 @app.route('/series')
