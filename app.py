@@ -3,7 +3,7 @@ import re
 import uuid
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
-import PyPDF2
+from pdfminer.high_level import extract_text
 
 app = Flask(__name__)
 app.secret_key = 'YOUR_SECRET_KEY'  # 적절한 비밀키로 변경
@@ -17,14 +17,10 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 SERIES_DB = {}
 
 def extract_text_from_pdf(filepath):
-    """PDF 파일에서 텍스트를 추출 (단순 예시)"""
-    text = ""
-    with open(filepath, 'rb') as f:
-        reader = PyPDF2.PdfReader(f)
-        for page in reader.pages:
-            page_text = page.extract_text()
-            if page_text:
-                text += page_text + "\n"
+    """
+    pdfminer.six를 사용해 PDF 파일에서 텍스트를 추출합니다.
+    """
+    text = extract_text(filepath)
     return text
 
 def clean_text(text):
@@ -37,7 +33,7 @@ def clean_text(text):
     text = re.sub(r'\n{2,}', '[[PARA]]', text)
     # 단일 줄바꿈은 공백으로 변경
     text = re.sub(r'\n', ' ', text)
-    # 임시 토큰을 다시 두 개의 줄바꿈으로 복원
+    # 임시 토큰을 두 개의 줄바꿈으로 복원
     text = text.replace('[[PARA]]', '\n\n')
     return text
 
@@ -48,17 +44,16 @@ def extract_text_and_images(filepath):
     """
     items = []
     text_content = extract_text_from_pdf(filepath)
-    # 추출된 텍스트를 후처리: 불필요한 줄바꿈 제거
-    cleaned_text = clean_text(text_content)
-    items.append(("text", cleaned_text))
-    # 이미지 추출 로직은 필요 시 추가 구현 가능
+    cleaned = clean_text(text_content)
+    items.append(("text", cleaned))
+    # 이미지 추출 로직은 필요 시 추가 구현 (여기서는 생략)
     return items
 
 def split_text_by_rules(text, max_chars=220, max_lines=12):
     """
-    전체 텍스트를 줄바꿈(\n)을 기준으로 나눈 후,
-    현재 청크의 글자 수가 max_chars 또는 줄 수가 max_lines를 초과하면
-    새로운 청크로 분할하여 리스트로 반환합니다.
+    전체 텍스트를 줄바꿈(\n) 기준으로 나눈 후,
+    현재 청크에 추가했을 때 글자 수가 max_chars 또는 줄 수가 max_lines를 초과하면
+    새 청크로 분할하여 리스트로 반환합니다.
     """
     lines = text.split('\n')
     chunks = []
@@ -79,7 +74,6 @@ def split_text_by_rules(text, max_chars=220, max_lines=12):
 
     if current_chunk:
         chunks.append("\n".join(current_chunk))
-
     return chunks
 
 def ordinal(num):
@@ -101,7 +95,7 @@ def ordinal(num):
 def split_items_into_series(items, max_chars=220, max_lines=12, pages_per_series=10):
     """
     items (예: [("text", "...")])의 "text" 항목을
-    최대 220자 또는 최대 12줄 기준으로 분할한 뒤,
+    최대 220자 또는 최대 12줄 기준으로 청크로 분할한 뒤,
     한 시리즈당 pages_per_series(기본 10) 페이지씩 그룹핑합니다.
     각 시리즈의 제목은 "첫번째 시리즈", "두번째 시리즈", … 형식으로 지정됩니다.
     반환: 시리즈 리스트 (각 시리즈는 dict: {id, title, pages})
@@ -121,21 +115,21 @@ def split_items_into_series(items, max_chars=220, max_lines=12, pages_per_series
                     'title': title,
                     'pages': part_pages
                 })
-        # 이미지 항목 처리 추가 가능
+        # "image" 항목 처리 추가 가능
     return series_list
 
 @app.route('/')
 def index():
-    """메인 페이지: 파일 업로드 폼 (index.html)"""
+    """메인 페이지: 파일 업로드 폼 (index.html 렌더링)"""
     return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload():
     """
     파일 업로드 처리:
-    1) 기존 시리즈 데이터(SERIES_DB)와 uploads 폴더 내 파일들을 삭제
+    1) 기존 시리즈 DB와 uploads 폴더 내 모든 파일 삭제
     2) 새 파일 저장
-    3) PDF에서 텍스트(및 이미지) 추출 후, 텍스트를 분할하여 여러 시리즈로 그룹핑
+    3) PDF에서 텍스트(및 이미지) 추출 후, 텍스트 분할 및 여러 시리즈로 그룹핑
     4) 새 시리즈 데이터를 SERIES_DB에 저장 후 시리즈 목록 페이지로 리디렉션
     """
     uploaded_file = request.files.get('file')
@@ -154,7 +148,7 @@ def upload():
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     uploaded_file.save(filepath)
 
-    # PDF에서 텍스트(및 이미지) 추출 및 시리즈 생성
+    # PDF에서 텍스트(및 이미지) 추출 후 시리즈 분할
     items = extract_text_and_images(filepath)
     series_list = split_items_into_series(items, max_chars=220, max_lines=12, pages_per_series=10)
     for series in series_list:
@@ -164,7 +158,7 @@ def upload():
 
 @app.route('/series')
 def series_list():
-    """시리즈 목록 페이지 (series_list.html)"""
+    """시리즈 목록 페이지 (series_list.html 렌더링)"""
     return render_template('series_list.html', series_db=SERIES_DB)
 
 @app.route('/series/<series_id>/page/<int:page_number>')
@@ -172,7 +166,7 @@ def show_page(series_id, page_number):
     """
     페이지네이션:
     - 해당 시리즈의 페이지 목록에서 page_number 페이지를 가져와 표시합니다.
-    - 마지막 페이지인 경우, 전역 딕셔너리(SERIES_DB)를 사용해 이전/다음 시리즈 ID를 계산합니다.
+    - 마지막 페이지인 경우, 전역 딕셔너리 SERIES_DB를 사용해 이전/다음 시리즈 ID를 계산합니다.
     """
     series = SERIES_DB.get(series_id)
     if not series:
@@ -185,7 +179,7 @@ def show_page(series_id, page_number):
 
     page_content = pages[page_number - 1]
 
-    # 마지막 페이지인 경우 이전/다음 시리즈 ID 계산
+    # 마지막 페이지인 경우 이전/다음 시리즈 계산
     prev_series_id = None
     next_series_id = None
     if page_number == total_pages:
