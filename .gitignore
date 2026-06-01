@@ -1,0 +1,39 @@
+# ===== macOS =====
+.DS_Store
+
+# ===== Xcode / iOS =====
+ios/**/xcuserdata/
+ios/**/*.xcuserstate
+ios/**/*.xcscmblueprint
+ios/**/DerivedData/
+ios/build/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# Swift Package Manager
+ios/.build/
+ios/.swiftpm/
+
+# CocoaPods / Carthage (if added later)
+ios/Pods/
+ios/Carthage/Build/
+
+# ===== Android (added when the Android app starts) =====
+android/.gradle/
+android/build/
+android/**/build/
+android/local.properties
+android/.idea/
+android/captures/
+*.iml
+*.apk
+*.aab
+*.keystore
+!debug.keystore
