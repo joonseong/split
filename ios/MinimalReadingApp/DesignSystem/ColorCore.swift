@@ -26,12 +26,12 @@ extension Color {
 
         // MARK: Red
         public static let red900 = Color(hex: 0x180507)
-        public static let red800 = Color(hex: 0x330D12)
-        public static let red700 = Color(hex: 0x7A1525)
-        public static let red600 = Color(hex: 0x862637)
-        public static let red500 = Color(hex: 0xB53249)
-        public static let red400 = Color(hex: 0xE76527)
-        public static let red300 = Color(hex: 0xF40944)
+        public static let red800 = Color(hex: 0x3D0D12)
+        public static let red700 = Color(hex: 0x7A1925)
+        public static let red600 = Color(hex: 0xB82637)
+        public static let red500 = Color(hex: 0xF53249)
+        public static let red400 = Color(hex: 0xF76577)
+        public static let red300 = Color(hex: 0xFA99A4)
         public static let red200 = Color(hex: 0xFCCCD2)
         public static let red100 = Color(hex: 0xFEEBED)
 
@@ -47,15 +47,15 @@ extension Color {
         public static let yellow100 = Color(hex: 0xFFFBEC)
 
         // MARK: Green
-        public static let green900 = Color(hex: 0x0B3F0C)
-        public static let green800 = Color(hex: 0x0B6A1E)
-        public static let green700 = Color(hex: 0x194E3D)
-        public static let green600 = Color(hex: 0x15875B)
+        public static let green900 = Color(hex: 0x030F0C)
+        public static let green800 = Color(hex: 0x08261E)
+        public static let green700 = Color(hex: 0x104B3D)
+        public static let green600 = Color(hex: 0x18715B)
         public static let green500 = Color(hex: 0x20967A)
-        public static let green400 = Color(hex: 0x558698)
-        public static let green300 = Color(hex: 0x99CB8C)
-        public static let green200 = Color(hex: 0xC7E5D6)
-        public static let green100 = Color(hex: 0xE3F5F2)
+        public static let green400 = Color(hex: 0x58B09B)
+        public static let green300 = Color(hex: 0x90CBBC)
+        public static let green200 = Color(hex: 0xC7E5DE)
+        public static let green100 = Color(hex: 0xE9F5F2)
 
         // MARK: Blue
         public static let blue900 = Color(hex: 0x040917)
@@ -72,11 +72,11 @@ extension Color {
         public static let purple900 = Color(hex: 0x0E0717)
         public static let purple800 = Color(hex: 0x231139)
         public static let purple700 = Color(hex: 0x452272)
-        public static let purple600 = Color(hex: 0x6833A6)
+        public static let purple600 = Color(hex: 0x6833AA)
         public static let purple500 = Color(hex: 0x8A44E3)
-        public static let purple400 = Color(hex: 0xA773E6)
+        public static let purple400 = Color(hex: 0xA773EA)
         public static let purple300 = Color(hex: 0xC5A1F1)
-        public static let purple200 = Color(hex: 0xE2C0F6)
-        public static let purple100 = Color(hex: 0xF3DCFC)
+        public static let purple200 = Color(hex: 0xE2D0F8)
+        public static let purple100 = Color(hex: 0xF3ECFC)
     }
 }
