@@ -2,6 +2,8 @@
 
 MinimalReadingApp의 디자인 시스템입니다. iOS·Android 양쪽에서 공유합니다.
 
+> 📌 컴포넌트/화면 제작 시 **필수 사용 규칙**은 [`RULES.md`](./RULES.md)를 참고하세요.
+
 ## 구조
 
 ```
