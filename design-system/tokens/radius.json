@@ -1,0 +1,11 @@
+{
+  "$description": "Corner radius scale (pt/px). `full` (999) produces a pill/circle for any element.",
+  "radius": {
+    "2":    { "value": "2px" },
+    "4":    { "value": "4px" },
+    "8":    { "value": "8px" },
+    "12":   { "value": "12px" },
+    "16":   { "value": "16px" },
+    "full": { "value": "999px" }
+  }
+}

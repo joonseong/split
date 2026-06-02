@@ -11,7 +11,8 @@ design-system/
     ├── color.semantic.json  # semantic 컬러 (역할 기반, core를 참조)
     ├── text.core.json       # 타이포 core (fontsize/lineheight/letterspacing/fontweight)
     ├── text.semantic.json   # 타이포 semantic (Display/Title/Body/Caption/Label/Viewer)
-    └── spacing.json         # 스페이싱 스케일
+    ├── spacing.json         # 스페이싱 스케일
+    └── radius.json          # 코너 radius 스케일
 ```
 
 플랫폼별 코드는 이 토큰에서 생성/동기화합니다.
@@ -19,6 +20,7 @@ design-system/
 - iOS 컬러: `ColorCore.swift` (`Color.Core.*`), `ColorSemantic.swift` (`Color.Semantic.*`)
 - iOS 타이포: `TextCore.swift` (`TextCore.*`), `Typography.swift` (`TextStyle` + `.textStyle(_:)`), `TextSemantic.swift` (`TextStyle.display1` 등)
 - iOS 스페이싱: `Spacing.swift` (`Spacing.s16` 등)
+- iOS radius: `Radius.swift` (`Radius.r12`, `Radius.full` 등)
 - (위 Swift 파일은 모두 `ios/MinimalReadingApp/DesignSystem/`)
 - Android: (예정) Kotlin/Compose
 
