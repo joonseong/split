@@ -8,14 +8,19 @@ MinimalReadingApp의 디자인 시스템입니다. iOS·Android 양쪽에서 공
 design-system/
 └── tokens/                  # 플랫폼 중립 토큰 (source of truth)
     ├── color.core.json      # core 컬러 팔레트 (원시 컬러)
-    └── color.semantic.json  # semantic 컬러 (역할 기반, core를 참조)
+    ├── color.semantic.json  # semantic 컬러 (역할 기반, core를 참조)
+    ├── text.core.json       # 타이포 core (fontsize/lineheight/letterspacing/fontweight)
+    ├── text.semantic.json   # 타이포 semantic (Display/Title/Body/Caption/Label/Viewer)
+    └── spacing.json         # 스페이싱 스케일
 ```
 
 플랫폼별 코드는 이 토큰에서 생성/동기화합니다.
 
-- iOS core: `ios/MinimalReadingApp/DesignSystem/ColorCore.swift` (`Color.Core.*`)
-- iOS semantic: `ios/MinimalReadingApp/DesignSystem/ColorSemantic.swift` (`Color.Semantic.*`)
-- Android: (예정) Kotlin/Compose 컬러
+- iOS 컬러: `ColorCore.swift` (`Color.Core.*`), `ColorSemantic.swift` (`Color.Semantic.*`)
+- iOS 타이포: `TextCore.swift` (`TextCore.*`), `Typography.swift` (`TextStyle` + `.textStyle(_:)`), `TextSemantic.swift` (`TextStyle.display1` 등)
+- iOS 스페이싱: `Spacing.swift` (`Spacing.s16` 등)
+- (위 Swift 파일은 모두 `ios/MinimalReadingApp/DesignSystem/`)
+- Android: (예정) Kotlin/Compose
 
 ## 토큰 계층
 

@@ -1,0 +1,32 @@
+{
+  "$description": "Semantic typography styles — composite text styles that alias text.core scales. Renamed from the design source's 'sys' namespace to 'semantic'.",
+  "text": {
+    "semantic": {
+      "display": {
+        "1": { "fontsize": "{text.core.fontsize.24}", "lineheight": "{text.core.lineheight.32}", "letterspacing": "{text.core.letterspacing.l}", "fontweight": "{text.core.fontweight.bold}" },
+        "2": { "fontsize": "{text.core.fontsize.20}", "lineheight": "{text.core.lineheight.28}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.bold}" }
+      },
+      "title": {
+        "1": { "fontsize": "{text.core.fontsize.16}", "lineheight": "{text.core.lineheight.24}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.bold}" },
+        "2": { "fontsize": "{text.core.fontsize.14}", "lineheight": "{text.core.lineheight.20}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.bold}" }
+      },
+      "body": {
+        "1": { "fontsize": "{text.core.fontsize.16}", "lineheight": "{text.core.lineheight.24}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.regular}" },
+        "2": { "fontsize": "{text.core.fontsize.14}", "lineheight": "{text.core.lineheight.20}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.regular}" }
+      },
+      "caption": {
+        "1": { "fontsize": "{text.core.fontsize.13}", "lineheight": "{text.core.lineheight.20}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.regular}" }
+      },
+      "label": {
+        "bold":    { "fontsize": "{text.core.fontsize.10}", "lineheight": "{text.core.lineheight.14}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.bold}" },
+        "regular": { "fontsize": "{text.core.fontsize.10}", "lineheight": "{text.core.lineheight.14}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.regular}" }
+      },
+      "viewer": {
+        "l":  { "fontsize": "{text.core.fontsize.28}", "lineheight": "{text.core.lineheight.52}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.regular}" },
+        "m":  { "fontsize": "{text.core.fontsize.22}", "lineheight": "{text.core.lineheight.44}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.regular}" },
+        "s":  { "fontsize": "{text.core.fontsize.16}", "lineheight": "{text.core.lineheight.32}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.regular}" },
+        "xs": { "fontsize": "{text.core.fontsize.14}", "lineheight": "{text.core.lineheight.28}", "letterspacing": "{text.core.letterspacing.m}", "fontweight": "{text.core.fontweight.regular}" }
+      }
+    }
+  }
+}

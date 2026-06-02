@@ -1,0 +1,37 @@
+{
+  "$description": "Typography core scales — primitive font sizes, line heights, letter spacing, and weights. NOTE: the source core table spelled it 'linehight', but the sys table referenced 'lineheight'; the correct 'lineheight' spelling is used consistently here so semantic aliases resolve.",
+  "text": {
+    "core": {
+      "fontsize": {
+        "10": { "value": "10px" },
+        "13": { "value": "13px" },
+        "14": { "value": "14px" },
+        "16": { "value": "16px" },
+        "20": { "value": "20px" },
+        "22": { "value": "22px" },
+        "24": { "value": "24px" },
+        "28": { "value": "28px" },
+        "32": { "value": "32px" }
+      },
+      "lineheight": {
+        "14": { "value": "14px" },
+        "20": { "value": "20px" },
+        "24": { "value": "24px" },
+        "28": { "value": "28px" },
+        "32": { "value": "32px" },
+        "40": { "value": "40px" },
+        "44": { "value": "44px" },
+        "48": { "value": "48px" },
+        "52": { "value": "52px" }
+      },
+      "letterspacing": {
+        "m": { "value": "-0.5px" },
+        "l": { "value": "-1px" }
+      },
+      "fontweight": {
+        "bold":    { "value": 700 },
+        "regular": { "value": 400 }
+      }
+    }
+  }
+}
