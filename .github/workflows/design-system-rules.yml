@@ -1,0 +1,17 @@
+name: Design System Rules
+
+# Enforces design-system/RULES.md: components must use foundation tokens, and
+# core colors must never be used directly in UI.
+on:
+  push:
+    branches: [dev, main, "claude/**"]
+  pull_request:
+
+jobs:
+  rules-gate:
+    name: Token usage gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check design system token usage
+        run: bash scripts/check-design-system.sh

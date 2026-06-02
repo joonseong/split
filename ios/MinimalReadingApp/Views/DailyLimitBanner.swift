@@ -5,12 +5,12 @@ struct DailyLimitBanner: View {
     @Environment(LibraryStore.self) private var store
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: Spacing.s12) {
             Image(systemName: store.remainingToday > 0 ? "book.pages" : "moon.zzz")
                 .font(.title3)
                 .foregroundStyle(.accent)
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: Spacing.s2) {
                 Text("오늘의 읽기")
                     .font(.subheadline.weight(.semibold))
                 Text(subtitle)
@@ -25,7 +25,7 @@ struct DailyLimitBanner: View {
                 .foregroundStyle(store.remainingToday > 0 ? .primary : .secondary)
         }
         .padding()
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: Radius.r16, style: .continuous))
     }
 
     private var subtitle: String {

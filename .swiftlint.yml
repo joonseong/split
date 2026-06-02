@@ -1,0 +1,64 @@
+# SwiftLint configuration — enforces design-system/RULES.md in the editor/locally.
+#
+# The dependency-free CI gate is scripts/check-design-system.sh; this file gives
+# the same feedback inside Xcode / `swiftlint` for developers who have it.
+#
+# Run: swiftlint  (from repo root)
+
+# Only run our design-system custom rules (keep the gate focused, no style noise).
+only_rules:
+  - custom_rules
+
+# Core colors and raw values legitimately live in the DesignSystem layer.
+excluded:
+  - ios/MinimalReadingApp/DesignSystem
+  - ios/MinimalReadingApp/Preview Content
+
+custom_rules:
+  ds_core_color_in_ui:
+    name: "Core color in UI (규칙2)"
+    regex: 'Color\.Core\.'
+    message: "코어 컬러를 UI에 직접 사용 금지. Color.Semantic.* 를 사용하세요."
+    severity: error
+
+  ds_raw_hex_color:
+    name: "Raw hex color (규칙1)"
+    regex: 'Color\(hex:'
+    message: "raw hex 컬러 금지. Color.Semantic.* 를 사용하세요."
+    severity: error
+
+  ds_raw_rgb_color:
+    name: "Raw RGB color (규칙1)"
+    regex: '(Color|UIColor)\(red:'
+    message: "raw RGB 컬러 금지. Color.Semantic.* 를 사용하세요."
+    severity: error
+
+  ds_system_font:
+    name: "System font (규칙1)"
+    regex: '\.font\(\.system\('
+    message: "시스템 폰트 직접 지정 금지. .textStyle(.body1) 등 text.semantic 토큰을 사용하세요."
+    severity: error
+
+  ds_raw_corner_radius:
+    name: "Raw corner radius (규칙1)"
+    regex: 'cornerRadius:[[:space:]]*[1-9]|\.cornerRadius\([[:space:]]*[1-9]'
+    message: "raw cornerRadius 금지. Radius.* 를 사용하세요."
+    severity: error
+
+  ds_raw_padding:
+    name: "Raw padding (규칙1)"
+    regex: '\.padding\([[:space:]]*[1-9]|\.padding\([[:space:]]*\.[A-Za-z]+,[[:space:]]*[1-9]'
+    message: "raw padding 값 금지. Spacing.* 를 사용하세요."
+    severity: error
+
+  ds_raw_stack_spacing:
+    name: "Raw stack spacing (규칙1)"
+    regex: 'spacing:[[:space:]]*[1-9]'
+    message: "raw 스택 spacing 값 금지. Spacing.* 를 사용하세요."
+    severity: error
+
+  ds_raw_line_spacing:
+    name: "Raw line spacing (규칙1)"
+    regex: '\.lineSpacing\([[:space:]]*[1-9]'
+    message: "raw lineSpacing 값 금지. .textStyle 또는 Spacing.* 를 사용하세요."
+    severity: error

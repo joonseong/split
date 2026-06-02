@@ -56,7 +56,7 @@ private struct SeriesRow: View {
     let locked: Bool
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: Spacing.s12) {
             ZStack {
                 Circle()
                     .fill(locked ? Color.secondary.opacity(0.15) : Color.accentColor.opacity(0.15))
@@ -65,7 +65,7 @@ private struct SeriesRow: View {
                     .foregroundStyle(locked ? Color.secondary : Color.accentColor)
             }
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: Spacing.s2) {
                 Text(series.title)
                     .font(.body.weight(.medium))
                 Text("\(series.pageCount)페이지 · 약 \(series.characterCount)자")
@@ -86,7 +86,7 @@ private struct SeriesRow: View {
             }
         }
         .foregroundStyle(locked ? .secondary : .primary)
-        .padding(.vertical, 4)
+        .padding(.vertical, Spacing.s4)
     }
 
     private var icon: String {

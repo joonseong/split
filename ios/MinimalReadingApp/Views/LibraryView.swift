@@ -32,7 +32,7 @@ private struct BookRow: View {
     let book: Book
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: Spacing.s4) {
             Text(book.title)
                 .font(.headline)
             Text(book.author)
@@ -42,7 +42,7 @@ private struct BookRow: View {
                 .font(.caption)
                 .foregroundStyle(.tertiary)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, Spacing.s4)
     }
 }
 

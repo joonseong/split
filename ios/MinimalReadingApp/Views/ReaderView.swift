@@ -33,7 +33,7 @@ struct ReaderView: View {
     }
 
     private var footer: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: Spacing.s8) {
             ProgressView(value: progress)
                 .tint(.accent)
             HStack {
@@ -47,7 +47,7 @@ struct ReaderView: View {
             .foregroundStyle(.secondary)
         }
         .padding(.horizontal)
-        .padding(.vertical, 12)
+        .padding(.vertical, Spacing.s12)
         .background(.bar)
     }
 
@@ -64,11 +64,10 @@ private struct PageView: View {
     var body: some View {
         ScrollView {
             Text(page.content)
-                .font(.system(.title3, design: .serif))
-                .lineSpacing(10)
+                .textStyle(.viewerM)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 28)
-                .padding(.vertical, 32)
+                .padding(.horizontal, Spacing.s28)
+                .padding(.vertical, Spacing.s32)
         }
     }
 }
