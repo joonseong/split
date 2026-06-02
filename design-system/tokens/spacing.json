@@ -1,5 +1,5 @@
 {
-  "$description": "Spacing scale (pt/px). Primitive layout spacing. Negative values allow intentional overlap. Steps: -1, 1, 2, 4, 6, 8, 10, 12, 16, 20 — beyond 20 the scale continues in 4px increments (24, 28, 32, ...).",
+  "$description": "Spacing scale (pt/px). Primitive layout spacing. Negative values allow intentional overlap. Steps: -1, 1, 2, 4, 6, 8, 10, 12, 16, 20, then 4px increments through 80.",
   "spacing": {
     "-1": { "value": "-1px" },
     "1":  { "value": "1px" },
@@ -10,6 +10,21 @@
     "10": { "value": "10px" },
     "12": { "value": "12px" },
     "16": { "value": "16px" },
-    "20": { "value": "20px" }
+    "20": { "value": "20px" },
+    "24": { "value": "24px" },
+    "28": { "value": "28px" },
+    "32": { "value": "32px" },
+    "36": { "value": "36px" },
+    "40": { "value": "40px" },
+    "44": { "value": "44px" },
+    "48": { "value": "48px" },
+    "52": { "value": "52px" },
+    "56": { "value": "56px" },
+    "60": { "value": "60px" },
+    "64": { "value": "64px" },
+    "68": { "value": "68px" },
+    "72": { "value": "72px" },
+    "76": { "value": "76px" },
+    "80": { "value": "80px" }
   }
 }
