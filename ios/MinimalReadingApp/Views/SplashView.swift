@@ -28,9 +28,11 @@ private struct BrandWordmark: View {
     var body: some View {
         if UIImage(named: "LogoMinimalReading") != nil {
             Image("LogoMinimalReading")
+                .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 258, height: 46)
+                .foregroundStyle(Color.Semantic.Txt.W.primary)
         } else {
             Text("미니멀리딩")
                 .textStyle(.display1)
