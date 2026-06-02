@@ -1,0 +1,78 @@
+{
+  "$description": "Core color palette — raw, primitive color tokens. Source of truth for all platforms (iOS, Android). Transcribed from the color.core design reference.",
+  "color": {
+    "core": {
+      "gs": {
+        "900": { "value": "#151517" },
+        "800": { "value": "#3F4047" },
+        "700": { "value": "#65628C" },
+        "600": { "value": "#858691" },
+        "500": { "value": "#9FA6A4" },
+        "400": { "value": "#B4B5C1" },
+        "300": { "value": "#CACBDA" },
+        "200": { "value": "#DEDFE8" },
+        "100": { "value": "#EEEEF9" },
+        "10":  { "value": "#F5F5FD" },
+        "0":   { "value": "#FFFFFF" }
+      },
+      "trans": {
+        "4": { "value": "#00000000", "alpha": 0.04, "description": "black @ 4% opacity" }
+      },
+      "red": {
+        "900": { "value": "#180507" },
+        "800": { "value": "#330D12" },
+        "700": { "value": "#7A1525" },
+        "600": { "value": "#862637" },
+        "500": { "value": "#B53249" },
+        "400": { "value": "#E76527" },
+        "300": { "value": "#F40944" },
+        "200": { "value": "#FCCCD2" },
+        "100": { "value": "#FEEBED" }
+      },
+      "yellow": {
+        "900": { "value": "#1A1507" },
+        "800": { "value": "#4A3C11" },
+        "700": { "value": "#896821" },
+        "600": { "value": "#BFA612" },
+        "500": { "value": "#FFD612" },
+        "400": { "value": "#FFF071" },
+        "300": { "value": "#FFEAA8" },
+        "200": { "value": "#FFF5DA" },
+        "100": { "value": "#FFFBEC" }
+      },
+      "green": {
+        "900": { "value": "#0B3F0C" },
+        "800": { "value": "#0B6A1E" },
+        "700": { "value": "#194E3D" },
+        "600": { "value": "#15875B" },
+        "500": { "value": "#20967A" },
+        "400": { "value": "#558698" },
+        "300": { "value": "#99CB8C" },
+        "200": { "value": "#C7E5D6" },
+        "100": { "value": "#E3F5F2" }
+      },
+      "blue": {
+        "900": { "value": "#040517" },
+        "800": { "value": "#08153A" },
+        "700": { "value": "#162B74" },
+        "600": { "value": "#2146AE" },
+        "500": { "value": "#2C55E8" },
+        "400": { "value": "#698DEE" },
+        "300": { "value": "#95AAF3" },
+        "200": { "value": "#C4D4F9" },
+        "100": { "value": "#EADEF0" }
+      },
+      "purple": {
+        "900": { "value": "#0E0717" },
+        "800": { "value": "#231139" },
+        "700": { "value": "#452272" },
+        "600": { "value": "#6833A6" },
+        "500": { "value": "#8A44E3" },
+        "400": { "value": "#A773E6" },
+        "300": { "value": "#C5A1F1" },
+        "200": { "value": "#E2C0F6" },
+        "100": { "value": "#F3DCFC" }
+      }
+    }
+  }
+}

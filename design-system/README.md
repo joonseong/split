@@ -1,0 +1,33 @@
+# Design System
+
+MinimalReadingApp의 디자인 시스템입니다. iOS·Android 양쪽에서 공유합니다.
+
+## 구조
+
+```
+design-system/
+└── tokens/              # 플랫폼 중립 토큰 (source of truth)
+    └── color.core.json  # core 컬러 팔레트 (원시 컬러)
+```
+
+플랫폼별 코드는 이 토큰에서 생성/동기화합니다.
+
+- iOS: `ios/MinimalReadingApp/DesignSystem/ColorCore.swift` (`Color.Core.*`)
+- Android: (예정) Kotlin/Compose 컬러
+
+## 토큰 계층
+
+1. **core (원시 컬러)** — `color.core.*`. 팔레트의 날것 그대로의 색. 기능 코드에서
+   직접 쓰지 않습니다. ← *현재 단계*
+2. **semantic (의미 컬러)** — `text`, `background`, `border` 등 역할 기반 토큰.
+   core 값을 참조합니다. (예정)
+3. **component** — 컴포넌트별 토큰. (예정)
+
+## 네이밍
+
+`color.core.<group>.<weight>` — 예: `color.core.blue.500`
+
+- group: `gs`(grayscale), `trans`, `red`, `yellow`, `green`, `blue`, `purple`
+- weight: 900(가장 진함) → 100/10/0(가장 옅음)
+
+iOS Swift에서는 `Color.Core.blue500` 형태로 접근합니다.
