@@ -1,0 +1,42 @@
+{
+  "$description": "Semantic color tokens — role-based colors that alias color.core primitives. Renamed from the design source's 'sys' namespace to 'semantic'. Brand color is green.",
+  "color": {
+    "semantic": {
+      "shape": {
+        "white":     { "value": "{color.core.gs.0}",      "description": "흰색의 면 컬러에 사용" },
+        "1depth":    { "value": "{color.core.gs.10}",     "description": "1depth 깊이의 면 컬러" },
+        "2depth":    { "value": "{color.core.gs.100}",    "description": "2depth 깊이의 면 컬러" },
+        "div":       { "value": "{color.core.gs.200}",    "description": "div를 면으로 사용할 경우 사용" },
+        "brand":     { "value": "{color.core.green.500}", "description": "브랜드컬러를 면에 사용할 때 사용" },
+        "black":     { "value": "{color.core.green.900}", "description": "로고 및 아이콘 Focus의 컬러" },
+        "icon":      { "value": "{color.core.green.800}", "description": "아이콘의 기본 컬러" },
+        "iconlight": { "value": "{color.core.gs.500}",    "description": "다른 요소와 함께 쓰이는 아이콘 컬러" },
+        "highlight": { "value": "{color.core.red.500}",   "description": "강조하고 싶은 면 컬러에 사용" }
+      },
+      "border": {
+        "div":    { "value": "{color.core.gs.100}",    "description": "div를 line으로 사용할 경우 사용" },
+        "button": { "value": "{color.core.gs.200}",    "description": "button or textfield에서 border를 줘야할 경우 사용" },
+        "thumb":  { "value": "{color.core.gs.100}",    "description": "thumb에 사용" },
+        "brand":  { "value": "{color.core.green.500}", "description": "Stroke에 브랜드 컬러를 사용할 때 사용" },
+        "error":  { "value": "{color.core.red.500}",   "description": "line에 error 표시를 해야할 경우 사용" }
+      },
+      "txt": {
+        "b": {
+          "primary":     { "value": "{color.core.gs.900}", "description": "검정색의 가장 상위 레벨 텍스트 컬러" },
+          "secondary":   { "value": "{color.core.gs.800}", "description": "본문 or 버튼레이블에 사용" },
+          "tertiary":    { "value": "{color.core.gs.600}", "description": "캡션 or 버튼레이블에 사용" },
+          "placeholder": { "value": "{color.core.gs.400}", "description": "플레이스홀더에 사용" }
+        },
+        "w": {
+          "primary":   { "value": "{color.core.gs.0}",   "description": "흰색의 가장 상위 레벨 텍스트 컬러" },
+          "secondary": { "value": "{color.core.gs.100}", "description": "배경이 어두울 경우 본문 or 버튼레이블에 사용" },
+          "tertiary":  { "value": "{color.core.gs.300}", "description": "배경이 어두울 경우 캡션 or 버튼레이블에 사용" }
+        },
+        "point":     { "value": "{color.core.green.600}", "description": "브랜드컬러를 텍스트에 사용할 때 사용" },
+        "error":     { "value": "{color.core.red.600}",   "description": "에러텍스트에 사용" },
+        "link":      { "value": "{color.core.blue.600}",  "description": "Link가 걸린 텍스트에 사용" },
+        "highlight": { "value": "{color.core.red.500}",   "description": "텍스트를 강조하고 싶을 때 사용" }
+      }
+    }
+  }
+}
