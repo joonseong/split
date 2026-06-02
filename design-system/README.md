@@ -35,6 +35,9 @@ design-system/
    > 디자인 원본에서는 `sys` 네임스페이스였으나, 의미를 명확히 하기 위해
    > `semantic`으로 변경해 적용했습니다.
 3. **component** — 컴포넌트별 토큰. (예정)
+   > iOS 컴포넌트 구현은 `ios/MinimalReadingApp/Components/` (`DSButton`,
+   > `DSInputBox`, `DSChip` 등)에 있으며, 모두 semantic/spacing/radius 토큰만
+   > 사용합니다(강제 게이트로 검증).
 
 ## 네이밍
 
