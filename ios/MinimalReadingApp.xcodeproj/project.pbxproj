@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1A00000000000000000000A0 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 1A00000000000000000000A2 /* Lottie */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		1A0000000000000000000005 /* MinimalReadingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MinimalReadingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -19,6 +23,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A00000000000000000000A0 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +64,9 @@
 			fileSystemSynchronizedGroups = (
 				1A0000000000000000000004 /* MinimalReadingApp */,
 			);
+			packageProductDependencies = (
+				1A00000000000000000000A2 /* Lottie */,
+			);
 			name = MinimalReadingApp;
 			productName = MinimalReadingApp;
 			productReference = 1A0000000000000000000005 /* MinimalReadingApp.app */;
@@ -91,6 +99,9 @@
 			productRefGroup = 1A0000000000000000000003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
+			packageReferences = (
+				1A00000000000000000000A1 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+			);
 			targets = (
 				1A0000000000000000000006 /* MinimalReadingApp */,
 			);
@@ -317,6 +328,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1A00000000000000000000A1 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1A00000000000000000000A2 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A00000000000000000000A1 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1A0000000000000000000001 /* Project object */;
 }
