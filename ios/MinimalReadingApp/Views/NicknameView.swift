@@ -4,7 +4,7 @@ import SwiftUI
 /// A default nickname is auto-generated ("형용사 명사"); the user can edit it
 /// (max 16 chars). Back returns to the login screen.
 struct NicknameView: View {
-    var onNext: () -> Void = {}
+    var onNext: (String) -> Void = { _ in }
 
     @Environment(\.dismiss) private var dismiss
     @State private var nickname = NicknameGenerator.random()
@@ -89,8 +89,10 @@ struct NicknameView: View {
     // MARK: Bottom action
 
     private var bottomBar: some View {
-        DSButton(title: "다음", size: .h56, style: .primary) { onNext() }
-            .disabled(nickname.trimmingCharacters(in: .whitespaces).isEmpty)
+        DSButton(title: "다음", size: .h56, style: .primary) {
+            onNext(nickname.trimmingCharacters(in: .whitespaces))
+        }
+        .disabled(nickname.trimmingCharacters(in: .whitespaces).isEmpty)
             .padding(.horizontal, Spacing.s16)
             .padding(.top, Spacing.s8)
             .padding(.bottom, Spacing.s16)

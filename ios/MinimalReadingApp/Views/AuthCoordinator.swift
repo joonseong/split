@@ -1,19 +1,34 @@
 import SwiftUI
 
-/// Drives the pre-app flow: splash/login → nickname setup → done.
-/// Login pushes the nickname screen; its back button returns to login; "다음"
-/// completes auth and hands off to the main app.
-struct AuthCoordinator: View {
-    var onComplete: () -> Void = {}
+private enum AuthRoute: Hashable {
+    case nickname
+    case genre(nickname: String)
+}
 
-    @State private var showNickname = false
+/// Drives the pre-app flow: splash/login → nickname → genre selection → done.
+/// Each screen's back button pops to the previous one (genre → nickname →
+/// login). Completion hands the nickname + chosen genres to the app.
+struct AuthCoordinator: View {
+    var onComplete: (String, [Genre]) -> Void = { _, _ in }
+
+    @State private var path = NavigationPath()
 
     var body: some View {
-        NavigationStack {
-            AuthFlowView(onLogin: { showNickname = true })
-                .navigationDestination(isPresented: $showNickname) {
-                    NicknameView(onNext: onComplete)
+        NavigationStack(path: $path) {
+            AuthFlowView(onLogin: { path.append(AuthRoute.nickname) })
+                .navigationDestination(for: AuthRoute.self) { route in
+                    switch route {
+                    case .nickname:
+                        NicknameView(onNext: { nickname in
+                            path.append(AuthRoute.genre(nickname: nickname))
+                        })
                         .toolbar(.hidden, for: .navigationBar)
+                    case .genre(let nickname):
+                        GenreSelectionView(nickname: nickname, onComplete: { genres in
+                            onComplete(nickname, genres)
+                        })
+                        .toolbar(.hidden, for: .navigationBar)
+                    }
                 }
         }
     }
