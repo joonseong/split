@@ -3,21 +3,17 @@ import SwiftUI
 @main
 struct MinimalReadingAppApp: App {
     @State private var store = LibraryStore()
-    @State private var isActive = false
+    @State private var isAuthenticated = false
 
     var body: some Scene {
         WindowGroup {
-            ZStack {
-                if isActive {
-                    RootView()
-                        .environment(store)
-                } else {
-                    SplashView()
-                        .task {
-                            try? await Task.sleep(for: .seconds(1.6))
-                            withAnimation(.easeInOut) { isActive = true }
-                        }
-                }
+            if isAuthenticated {
+                RootView()
+                    .environment(store)
+            } else {
+                AuthFlowView(onAuthenticated: {
+                    withAnimation(.easeInOut) { isAuthenticated = true }
+                })
             }
         }
     }
