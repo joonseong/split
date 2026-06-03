@@ -1,9 +1,9 @@
 import SwiftUI
 
-/// A trailing icon action for a header.
+/// A trailing icon action for a header. `icon` is a design-system asset name.
 struct DSHeaderAction: Identifiable {
     let id = UUID()
-    let systemImage: String
+    let icon: String
     var action: () -> Void = {}
 }
 
@@ -18,9 +18,7 @@ struct DSHeader: View {
         HStack(spacing: Spacing.s16) {
             if let onBack {
                 Button(action: onBack) {
-                    Image(systemName: "chevron.left")
-                        .textStyle(.title1)
-                        .foregroundStyle(Color.Semantic.Shape.icon)
+                    DSIcon("ic_back")
                 }
                 .buttonStyle(.plain)
             }
@@ -36,9 +34,7 @@ struct DSHeader: View {
 
             ForEach(actions) { action in
                 Button(action: action.action) {
-                    Image(systemName: action.systemImage)
-                        .textStyle(.title1)
-                        .foregroundStyle(Color.Semantic.Shape.icon)
+                    DSIcon(action.icon)
                 }
                 .buttonStyle(.plain)
             }
@@ -52,14 +48,14 @@ struct DSHeader: View {
 #Preview {
     VStack(spacing: 0) {
         DSHeader(title: "미니멀리딩", actions: [
-            .init(systemImage: "magnifyingglass"),
-            .init(systemImage: "bell")
+            .init(icon: "ic_search"),
+            .init(icon: "ic_notice")
         ])
-        DSHeader(title: "Title", onBack: {}, actions: [.init(systemImage: "xmark")])
+        DSHeader(title: "Title", onBack: {}, actions: [.init(icon: "ic_close")])
         DSHeader(title: "Title", onBack: {})
         DSHeader(title: "001", onBack: {}, actions: [
-            .init(systemImage: "gearshape"),
-            .init(systemImage: "house")
+            .init(icon: "ic_setting"),
+            .init(icon: "ic_home_line")
         ])
     }
 }

@@ -21,9 +21,7 @@ struct DSCheckbox: View {
                 )
                 .overlay {
                     if isOn {
-                        Image(systemName: "checkmark")
-                            .textStyle(.labelBold)
-                            .foregroundStyle(Color.Semantic.Txt.W.primary)
+                        DSIcon("ic_check", size: Spacing.s16, color: Color.Semantic.Txt.W.primary)
                     }
                 }
         }

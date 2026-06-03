@@ -39,18 +39,16 @@ struct DSThumbnail: View {
                     .resizable()
                     .scaledToFill()
             } else {
-                Image(systemName: "book.closed")
-                    .textStyle(.display1)
-                    .foregroundStyle(Color.Semantic.Shape.iconLight)
+                DSIcon("ic_nobook", size: Spacing.s40, color: Color.Semantic.Shape.iconLight)
             }
         }
         .aspectRatio(3.0 / 4.0, contentMode: .fit)
         .clipShape(RoundedRectangle(cornerRadius: Radius.r12, style: .continuous))
         .overlay(alignment: .topTrailing) {
             Button(action: onToggleSave) {
-                Image(systemName: isSaved ? "bookmark.fill" : "bookmark")
-                    .textStyle(.body2)
-                    .foregroundStyle(isSaved ? Color.Semantic.Shape.brand : Color.Semantic.Shape.white)
+                DSIcon(isSaved ? "ic_bookmark_fill" : "ic_bookmark_line",
+                       size: Spacing.s24,
+                       color: isSaved ? Color.Semantic.Shape.brand : Color.Semantic.Shape.white)
                     .padding(Spacing.s8)
             }
             .buttonStyle(.plain)

@@ -1,9 +1,9 @@
 import SwiftUI
 
-/// One item in the bottom navigation bar.
+/// One item in the bottom navigation bar. `icon` is a design-system asset name.
 struct DSTabItem: Identifiable {
     let id = UUID()
-    let systemImage: String
+    let icon: String
     let label: String
 }
 
@@ -16,16 +16,14 @@ struct DSBottomBar: View {
         HStack(spacing: 0) {
             ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                 let isSelected = index == selection
+                let tint = isSelected ? Color.Semantic.Shape.brand : Color.Semantic.Txt.B.tertiary
                 Button { selection = index } label: {
                     VStack(spacing: Spacing.s4) {
-                        Image(systemName: item.systemImage)
-                            .textStyle(.title1)
+                        DSIcon(item.icon, size: Spacing.s24, color: tint)
                         Text(item.label)
                             .textStyle(.labelRegular)
+                            .foregroundStyle(tint)
                     }
-                    .foregroundStyle(isSelected
-                        ? Color.Semantic.Shape.brand
-                        : Color.Semantic.Txt.B.tertiary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, Spacing.s8)
                 }
@@ -53,10 +51,9 @@ struct DSReaderNavBar: View {
         HStack(spacing: Spacing.s16) {
             Button(action: onPrev) {
                 HStack(spacing: Spacing.s4) {
-                    Image(systemName: "chevron.left")
-                    Text("이전 화")
+                    DSIcon("ic_left", size: Spacing.s20, color: Color.Semantic.Txt.B.secondary)
+                    Text("이전 화").textStyle(.body2)
                 }
-                .textStyle(.body2)
             }
             Spacer()
             Button(action: onList) {
@@ -65,10 +62,9 @@ struct DSReaderNavBar: View {
             Spacer()
             Button(action: onNext) {
                 HStack(spacing: Spacing.s4) {
-                    Text("다음 화")
-                    Image(systemName: "chevron.right")
+                    Text("다음 화").textStyle(.body2)
+                    DSIcon("ic_right", size: Spacing.s20, color: Color.Semantic.Txt.B.secondary)
                 }
-                .textStyle(.body2)
             }
         }
         .foregroundStyle(Color.Semantic.Txt.B.secondary)
@@ -88,9 +84,9 @@ struct DSReaderNavBar: View {
         DSReaderNavBar()
         DSBottomBar(
             items: [
-                .init(systemImage: "house", label: "홈"),
-                .init(systemImage: "books.vertical", label: "내서재"),
-                .init(systemImage: "person", label: "마이")
+                .init(icon: "ic_home_line", label: "홈"),
+                .init(icon: "ic_library_line", label: "내서재"),
+                .init(icon: "ic_my_line", label: "마이")
             ],
             selection: .constant(0)
         )

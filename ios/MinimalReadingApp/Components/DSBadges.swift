@@ -11,9 +11,7 @@ struct DSChip: View {
                 .textStyle(.caption1)
                 .foregroundStyle(Color.Semantic.Txt.B.secondary)
             Button(action: onRemove) {
-                Image(systemName: "xmark")
-                    .textStyle(.labelBold)
-                    .foregroundStyle(Color.Semantic.Shape.iconLight)
+                DSIcon("ic_close", size: Spacing.s16, color: Color.Semantic.Shape.iconLight)
             }
             .buttonStyle(.plain)
         }

@@ -70,8 +70,7 @@ struct DSInputBox: View {
 
                     if focused && !text.isEmpty {
                         Button { text = "" } label: {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundStyle(Color.Semantic.Shape.iconLight)
+                            DSIcon("ic_close", size: Spacing.s20, color: Color.Semantic.Shape.iconLight)
                         }
                         .buttonStyle(.plain)
                     }
@@ -105,9 +104,7 @@ struct DSChatInput: View {
                 .disabled(!isEnabled)
 
             Button(action: onSend) {
-                Image(systemName: "arrow.up")
-                    .textStyle(.title2)
-                    .foregroundStyle(Color.Semantic.Txt.W.primary)
+                DSIcon("ic_top", size: Spacing.s20, color: Color.Semantic.Txt.W.primary)
                     .frame(width: Spacing.s32, height: Spacing.s32)
                     .background(isEnabled ? Color.Semantic.Shape.brand : Color.Semantic.Shape.iconLight)
                     .clipShape(Circle())
@@ -149,9 +146,7 @@ struct DSSelectBox: View {
                                 ? Color.Semantic.Txt.B.placeholder
                                 : Color.Semantic.Txt.B.primary)
                         Spacer(minLength: Spacing.s8)
-                        Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                            .textStyle(.body2)
-                            .foregroundStyle(Color.Semantic.Shape.icon)
+                        DSIcon(isExpanded ? "ic_up" : "ic_down", size: Spacing.s24, color: Color.Semantic.Shape.icon)
                     }
                 }
             }
