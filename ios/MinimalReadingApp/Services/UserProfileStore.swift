@@ -32,10 +32,11 @@ final class UserProfileStore {
     }
 
     /// Home top tabs: "베스트셀러" first, then the selected genres (leftmost =
-    /// selected) in canonical order. When nothing is selected, the home screen
-    /// falls back to its own default tab set.
+    /// selected) in canonical order. When nothing is selected, all genres show
+    /// in their canonical (genre-selection page) order.
     var homeTabs: [String] {
-        ["베스트셀러"] + selectedGenres.map(\.title)
+        let genres = selectedGenres.isEmpty ? Genre.allCases : selectedGenres
+        return ["베스트셀러"] + genres.map(\.title)
     }
 
     private enum Keys {

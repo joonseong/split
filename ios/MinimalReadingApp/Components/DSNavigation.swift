@@ -1,13 +1,16 @@
 import SwiftUI
 
-/// One item in the bottom navigation bar. `icon` is a design-system asset name.
+/// One item in the bottom navigation bar. The selected tab shows `fillIcon`,
+/// others show `lineIcon` (both rendered in their dark source color).
 struct DSTabItem: Identifiable {
     let id = UUID()
-    let icon: String
+    let lineIcon: String
+    let fillIcon: String
     let label: String
 }
 
-/// Bottom navigation bar (GNB). Selected item uses the brand color.
+/// Bottom navigation bar (GNB). Selection is shown by the filled icon + bold
+/// label; all items use the dark secondary color.
 struct DSBottomBar: View {
     let items: [DSTabItem]
     @Binding var selection: Int
@@ -16,13 +19,20 @@ struct DSBottomBar: View {
         HStack(spacing: 0) {
             ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                 let isSelected = index == selection
-                let tint = isSelected ? Color.Semantic.Shape.brand : Color.Semantic.Txt.B.tertiary
                 Button { selection = index } label: {
-                    VStack(spacing: Spacing.s4) {
-                        DSIcon(item.icon, size: Spacing.s24, color: tint)
+                    VStack(spacing: Spacing.s2) {
+                        if isSelected {
+                            Image(item.fillIcon)
+                                .renderingMode(.original)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: Spacing.s32, height: Spacing.s32)
+                        } else {
+                            DSIcon(item.lineIcon, size: Spacing.s32, color: Color.Semantic.Txt.B.secondary)
+                        }
                         Text(item.label)
-                            .textStyle(.labelRegular)
-                            .foregroundStyle(tint)
+                            .textStyle(isSelected ? .labelBold : .labelRegular)
+                            .foregroundStyle(Color.Semantic.Txt.B.secondary)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, Spacing.s8)
@@ -30,8 +40,8 @@ struct DSBottomBar: View {
                 .buttonStyle(.plain)
             }
         }
-        .padding(.horizontal, Spacing.s8)
-        .frame(height: Spacing.s56)
+        .padding(.horizontal, Spacing.s48)
+        .frame(height: Spacing.s64)
         .background(Color.Semantic.Shape.white)
         .overlay(alignment: .top) {
             Rectangle()
@@ -84,9 +94,9 @@ struct DSReaderNavBar: View {
         DSReaderNavBar()
         DSBottomBar(
             items: [
-                .init(icon: "ic_home_line", label: "홈"),
-                .init(icon: "ic_library_line", label: "내서재"),
-                .init(icon: "ic_my_line", label: "마이")
+                .init(lineIcon: "ic_home_line", fillIcon: "ic_home_fill", label: "홈"),
+                .init(lineIcon: "ic_library_line", fillIcon: "ic_library_fill", label: "내 책장"),
+                .init(lineIcon: "ic_my_line", fillIcon: "ic_my_fill", label: "마이")
             ],
             selection: .constant(0)
         )

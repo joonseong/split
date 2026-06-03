@@ -1,15 +1,14 @@
 import SwiftUI
 
-/// Top-level navigation container for the app.
+/// Top-level container for the authenticated app (home + bottom navigation).
 struct RootView: View {
     var body: some View {
-        NavigationStack {
-            LibraryView()
-        }
+        MainTabView()
     }
 }
 
 #Preview {
     RootView()
+        .environment(UserProfileStore())
         .environment(LibraryStore())
 }
