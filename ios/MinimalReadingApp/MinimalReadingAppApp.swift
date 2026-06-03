@@ -11,7 +11,7 @@ struct MinimalReadingAppApp: App {
                 RootView()
                     .environment(store)
             } else {
-                AuthFlowView(onAuthenticated: {
+                AuthCoordinator(onComplete: {
                     withAnimation(.easeInOut) { isAuthenticated = true }
                 })
             }

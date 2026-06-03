@@ -7,7 +7,8 @@ private enum AuthPhase { case splash, login }
 /// login positions (white background, green logo / gray tagline) — moving up
 /// while their colors morph. Social buttons and the footer fade in on arrival.
 struct AuthFlowView: View {
-    var onAuthenticated: () -> Void = {}
+    /// Called when the user taps a social login button.
+    var onLogin: () -> Void = {}
 
     @State private var phase: AuthPhase = .splash
 
@@ -70,7 +71,7 @@ struct AuthFlowView: View {
     private var socialRow: some View {
         HStack(spacing: Spacing.s16) {
             ForEach(SocialProvider.allCases, id: \.self) { provider in
-                SocialLoginButton(provider: provider) { onAuthenticated() }
+                SocialLoginButton(provider: provider) { onLogin() }
             }
         }
     }

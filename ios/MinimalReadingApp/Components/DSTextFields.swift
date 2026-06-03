@@ -11,11 +11,11 @@ private struct FieldContainer<Content: View>: View {
     var body: some View {
         content
             .padding(.horizontal, Spacing.s16)
-            .frame(height: Spacing.s56)
+            .frame(height: Spacing.s48)
             .background(isEnabled ? Color.Semantic.Shape.white : Color.Semantic.Shape.depth2)
-            .clipShape(RoundedRectangle(cornerRadius: Radius.r8, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: Radius.r4, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: Radius.r8, style: .continuous)
+                RoundedRectangle(cornerRadius: Radius.r4, style: .continuous)
                     .strokeBorder(border, lineWidth: isFocused ? 1.5 : 1)
             )
     }
