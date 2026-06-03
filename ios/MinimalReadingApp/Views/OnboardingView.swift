@@ -1,24 +1,17 @@
 import SwiftUI
 
-/// 03-1. 온보딩 — concept intro with a looping Lottie animation and caption.
-/// (Figma node 5389:9357). The red placeholder in the design is the animation
-/// area. Tap anywhere to continue.
+/// 03-1. 온보딩 — concept intro (Figma node 5389:9357). The Lottie animation
+/// already contains the caption text, so the screen is just the animation.
+/// Tap anywhere to continue.
 struct OnboardingView: View {
     var onFinished: () -> Void = {}
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack {
             Spacer()
-            VStack(spacing: Spacing.s24) {
-                LottieView(name: "onboarding")
-                    .aspectRatio(393.0 / 310.0, contentMode: .fit)
-                    .frame(maxWidth: .infinity)
-
-                Text("미니멀리딩은 책 한 권을\n시리즈로 나누어 읽습니다.")
-                    .textStyle(.display2)
-                    .foregroundStyle(Color.Semantic.Txt.B.primary)
-                    .multilineTextAlignment(.center)
-            }
+            LottieView(name: "onboarding")
+                .aspectRatio(393.0 / 310.0, contentMode: .fit)
+                .frame(maxWidth: .infinity)
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
